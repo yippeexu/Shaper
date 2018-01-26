@@ -1,5 +1,28 @@
 BITS 16
 
+jmp short start
+
+bpb:
+iOEM db "ShaOS  "
+iSectSize dw 0x200 ; bytes / sector
+iClustSize db 1    ; 1 sector per cluster (for simplicity)
+iResCnt dw 1       ; number of reserved sectors
+iFatCnt db 2       ; # of fat copies
+iRootSize dw 224   ; size of root dir
+iTotalSect dw 2880 ; total sectors
+iMedia db 0xF0     ; media descriptor
+iFatSize dw 9      ; size of each FAT
+iTrackSect dw 9    ; sectors per track
+iHeadCnt dw 2      ; number of r/w heads
+iHiddentSect dd 0  ; number of hidden sectors
+iSect32 dd 0       ; number of > 32MB sectors
+iBootDrive db 0    ; holds drive of bootsector
+iReserved db 0     ; empty reserved attribute
+iBootSign db 0x29  ; extended bootsig
+iVolID db "seri"   ; disk serial
+acVolumeLabel db "MYVOLUME  " ; volume label
+acFSType db "FAT16  "         ; fs type
+
 start:
     cli
 	mov ax, 0x07C0	
