@@ -10,13 +10,8 @@ start:
 	mov ax, 0x07C0		
 	mov ds, ax
     sti
-
-    mov ah, 0x06
-    xor al, al
-    xor cx, cx
-    mov dx, 184FH
-    mov bh, 0x1E
-    int 0x10
+	
+	call clear_screen
 
 	mov si, intro
 	call puts16
@@ -29,7 +24,7 @@ start:
 
 
 	intro db 'Shaper Bootloader, written by KingLuigi4932 and Kerndever', 0xD, 0xA, 0
-    loadmsg db 'Loading kernel...', 0
+    loadmsg db 'Loading kernel... ', 0
     failed db 'Failed!', 0xD, 0xA, 0
 
 
@@ -46,6 +41,25 @@ puts16:
 .done:
 	ret
 
-
+clear_screen:
+	mov AX, 1003h
+	mov BL, 00h
+	int 10h
+	
+	; Clear screen
+	;; Set mode to clear screen for all bioses
+	mov AH, 00h
+	int 10h
+	
+	;; Fill screen with blue background
+	mov AH, 09h
+	mov AL, 20h
+	mov BH, 00h
+	mov BL, 1Eh
+	mov CX, 2000h
+	int 10h
+	
+	ret
+	
 times 510-($-$$) db 0
-dw 0xAA55	
+dw 0xAA55
