@@ -2,8 +2,7 @@ BITS 16
 
 jmp short start
 
-bpb:
-iOEM db "ShaOS  "
+iOEM db "ShapeOS"
 iSectSize dw 0x200 ; bytes / sector
 iClustSize db 1    ; 1 sector per cluster (for simplicity)
 iResCnt dw 1       ; number of reserved sectors
