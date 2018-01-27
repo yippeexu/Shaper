@@ -103,15 +103,15 @@ logicalsector_to_chs:
 	mov bx, ax			; Save logical sector
 
 	mov dx, 0			; First the sector
-	div word [SectorsPerTrack]
+	div word [iTrackSect]
 	add dl, 01h			; Physical sectors start at 1
 	mov cl, dl			; Sectors belong in CL for int 13h
 	mov ax, bx
 
 	mov dx, 0			; Now calculate the head
-	div word [SectorsPerTrack]
+	div word [iTrackSect]
 	mov dx, 0
-	div word [Sides]
+	div word [iHeadCnt]
 	mov dh, dl			; Head/side
 	mov ch, al			; Track
 
@@ -120,11 +120,6 @@ logicalsector_to_chs:
 	ret
 	
 ;; [Print functions] -------------
-puts_newline:
-	mov si, newline
-	call puts16
-	ret
-	
 puts16:
 	mov ah, 0Eh		
 
