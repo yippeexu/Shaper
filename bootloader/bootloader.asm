@@ -1,9 +1,10 @@
 BITS 16
 
 jmp short start
+nop
 
-iOEM db "ShapeOS"
-iSectSize dw 0x200 ; bytes / sector
+iOEM db "ShapeOS  "
+iSectSize dw 0x512 ; bytes / sector
 iClustSize db 1    ; 1 sector per cluster (for simplicity)
 iResCnt dw 1       ; number of reserved sectors
 iFatCnt db 2       ; # of fat copies
@@ -18,9 +19,9 @@ iSect32 dd 0       ; number of > 32MB sectors
 iBootDrive db 0    ; holds drive of bootsector
 iReserved db 0     ; empty reserved attribute
 iBootSign db 0x29  ; extended bootsig
-iVolID db "seri"   ; disk serial
-acVolumeLabel db "MYVOLUME  " ; volume label
-acFSType db "FAT16  "         ; fs type
+iVolID dd 0xA0A1A2A3           ; disk serial
+acVolumeLabel db "MOS FLOPPY " ; volume label
+acFSType db "FAT16  "          ; fs type
 
 start:
     cli
@@ -52,7 +53,6 @@ start:
 
 puts16:
 	mov ah, 0Eh		
-
 .repeat:
 	lodsb			
 	cmp al, 0
