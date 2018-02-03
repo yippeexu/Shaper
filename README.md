@@ -14,6 +14,6 @@ This is the **head of this organization**, ShaperOS is an operating system made 
 ## Linux:
 **.**
 ## Shaper Developers:
-   * [KingLuigi4932](www.github.com/KingLuigi4932) (Owner)
-   * [Safal Aryal](www.github.com/safsom) (Head-CoreTeam)
-   * [John](www.github.com/djlw78) (CoreTeam)
+   * [KingLuigi4932](http://www.github.com/KingLuigi4932) (Owner)
+   * [Safal Aryal](http://www.github.com/safsom) (Head-CoreTeam)
+   * [John](http://www.github.com/djlw78) (CoreTeam)
