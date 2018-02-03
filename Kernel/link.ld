@@ -1,16 +1,17 @@
 OUTPUT_FORMAT("elf32-i386");
-ENTRY(boot_start);
+ENTRY(booting);
 SECTIONS
 {
-    . = 0x9C00;
-    /* Code and data in start.o placed between 0x7c00 and 0x7e00 */
+    . = 0x10000; /* Proteted Mode Kernel's recommended address */
+    /* Code and data in start.o placed between 0x10000 and 0x10200 */
     .boot : SUBALIGN(0) {
-        start.o(.text)
-        start.o(.rodata*)
-        start.o(.data)
+        kernel\obj\boot.o(.text)
+        kernel\obj\boot.o(.rodata*)
+        kernel\obj\boot.o(.data)
+		kernel\obj\boot.o(.sabt)
     }
 
-    /* Code and data from all other files placed after 0x7e00 */
+    /* Code and data from all other files placed after 0x10200 */
     .kernel.text : SUBALIGN(4) {
         *(.text)
     }
