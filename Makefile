@@ -7,9 +7,9 @@ C_SOURCES := $(wildcard kernel/src/*.c)
 ASM_SOURCES := $(wildcard kernel/asm/*.asm)
 
 C_OBJS := $(patsubst kernel/src/%.c, \
-	kernel/obj/%.o, $(C_SOURCES))
+	 kernel/obj/%.o, $(C_SOURCES))
 ASM_OBJS := $(patsubst kernel/asm/%.asm, \
-	kernel/obj/%-asm.o, $(ASM_SOURCES))
+	 kernel/obj/%-asm.o, $(ASM_SOURCES))
 
 INCLUDE := kernel/src/include
 ASM_FLAGS := -felf32 -Fdwarf
