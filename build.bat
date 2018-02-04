@@ -3,7 +3,7 @@
 set AS=wintools\nasm
 set ARCH=i686
 set LD=\mingw\bin\%ARCH%-elf-ld
-set CC=\mingw\bin\%ARCH%-elf-gcc.
+set CC=\mingw\bin\%ARCH%-elf-gcc
 set OC=\mingw\bin\objcopy
 set PC=wintools\sfk partcopy
 set VM="\Program Files (x86)\Bochs-2.6.9\bochs.exe"
