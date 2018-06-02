@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <task.h>
 #include <apic.h>
 #include <cmos.h>
 #include <irq.h>
@@ -107,14 +108,12 @@ void _irq_unmask(int irq)
 	outb(port, value);
 }
 
-uint32_t esp = 0;
-
 void irq_handler(x86_regs *context)
 {
 	//if (int_controller == INTCONT_8259_PIC) {
 		// if (_pic_in_service(context->interrupt_no - 0x20)) 
 		// {
-		// 	printstr("Spurious IRQ encounterd!\n");
+		// 	printstr("spurious irq encounterd!\n");
 		// 	if ((context->interrupt_no - 0x20) >= 8)
 		// 		_pic_sendEOI(7);
 			
@@ -131,7 +130,7 @@ void irq_handler(x86_regs *context)
 		_pic_sendEOI(context->interrupt_no - 32);
 		if (context->interrupt_no - 32 == TIMER_IRQ && context->ebx & 0x80000000)
 		{
-			//yield();
+			yield();
 		} 
 		//apic_sendEOI();
 
@@ -145,6 +144,6 @@ void irq_handler(x86_regs *context)
 
 void _apic_suprious()
 {
-	//printstr("APIC Suprious\n");
+	//printstr("apic suprious\n");
 	//apic_sendEOI();
 }

@@ -15,9 +15,13 @@ REM Compile Assembly files
 echo Compiling OS Assembly files
 for /r .\kernel\asm\ %%E in (*.asm) do "tools\win\nasm" -felf kernel\asm\%%~nE.asm -o temp\%%~nE.asm.o
 
+REM Compile library
+echo Compiling OS library
+for /r .\kernel\lib\ %%D in (*.c) do \mingw\bin\i686-elf-gcc -w -Ikernel\lib\include -Ikernel\src\include -c -ffreestanding -fomit-frame-pointer -nostdlib -g %%D -o temp\%%~nD.o
+
 REM Compile C files
 echo Compiling OS C files
-for /r .\kernel\src\ %%D in (*.c) do \mingw\bin\i686-elf-gcc -w -Ikernel\src\include -Ikernel\lib -c -ffreestanding -fomit-frame-pointer -nostdlib -g %%D -o temp\%%~nD.o
+for /r .\kernel\src\ %%D in (*.c) do \mingw\bin\i686-elf-gcc -w -Ikernel\src\include -Ikernel\lib\include -c -ffreestanding -fomit-frame-pointer -nostdlib -g %%D -o temp\%%~nD.o
 
 echo Linking object files
 for /r %%F in (temp\*.o) do call :linkFiles %%F

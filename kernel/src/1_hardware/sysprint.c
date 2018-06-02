@@ -9,11 +9,12 @@
 #include <serial.h>
 #include <heap.h>
 #include <gdt.h>
+#include <pit.h>
 #include <io.h>
 
 bool scroll = true;
-uint8_t x;
-uint8_t y;
+uint8_t x = 0;
+uint8_t y = 0;
 uint8_t color;
 uint8_t init_color;
 uint16_t* buf;
@@ -23,23 +24,9 @@ void set_cursor_pos(uint8_t x, uint8_t y);
 
 void init_printer(int fg, int bg)
 {
-	//x = 0;
-	//y = 0;
 	init_color = color = fg | bg << 4;
 	buf = (uint16_t *)0x000B8000;
 	memset(buf, color << 8 | 0x20, 80 * 25);
-
-	//tss_t* mytss = (tss_t*)(_gdt_get_ptr()[5].base2 << 24 | _gdt_get_ptr()[5].base1 << 16 | _gdt_get_ptr()[5].base0);
-	////_sys_v86mode(mytss->ss, mytss->esp, mytss->cs, mytss->eip);
-
-	//// Disable blinking text
-	//inb(0x3DA);
-	////uint8_t addrdatareg = inb(0x3C0);
-	//outb(0x3C0, 0x10);
-	////uint8_t regvalue = inb(0x3C1) & 0xF7;
-	////outb(0x3C0, regvalue);
-	////outb(0x3C0, addrdatareg);
-	////inb(0x3DA);
 }
 
 uint8_t get_x_pos() {
@@ -60,12 +47,18 @@ void unlock_scroll() {
 
 void set_position(uint8_t x_pos, uint8_t y_pos)
 {
+	pit_disable_execute();
+
 	x = x_pos;
 	y = y_pos;
+
+	pit_enable_execute();
 }
 
 void set_cursor_pos(uint8_t x, uint8_t y)
 {
+	pit_disable_execute();
+
 	uint16_t pos = y * 80 + x;
 
 	outb(0x3D4, 0x0F);
@@ -73,10 +66,14 @@ void set_cursor_pos(uint8_t x, uint8_t y)
 
 	outb(0x3D4, 0x0E);
 	outb(0x3D5, (pos >> 8) & 0xFF);
+
+	pit_enable_execute();
 }
 
 void set_cursor_visible(bool visible)
 {
+	pit_disable_execute();
+
 	if (visible) {
 		outb(0x3D4, 0x0A);
 		outb(0x3D5, (inb(0x3D5) & 0xC0) | 0);
@@ -87,10 +84,14 @@ void set_cursor_visible(bool visible)
 		outb(0x3D4, 0x0A);
 		outb(0x3D5, 0x20);
 	}
+
+	pit_enable_execute();
 }
 
 void scrollup()
 {
+	pit_disable_execute();
+
 	if (scroll) {
 		for (int i = 0; i < 25; i++)
 		{
@@ -105,24 +106,36 @@ void scrollup()
 		for (int i = 0; i < 80; i++)
 			buf[24 * 80 + i] = color << 8 | ' ';
 	}
+
+	pit_enable_execute();
 }
 
 void printstrl(char *value, size_t length)
 {
+	pit_disable_execute();
+
 	for (int i = 0; i < length; i++)
 		printchr(value[i]);
+
+	pit_enable_execute();
 }
 
 // Print regular char *
 void printstr(char *value)
 {
+	pit_disable_execute();
+
 	for (int i = 0; i < lengthof(value); i++) {
 		printchr(value[i]);
 	}
+
+	pit_enable_execute();
 }
 
 void printchr(char value)
 {
+	pit_disable_execute();
+	
 	if (value == '\n')
 	{
 		y++;
@@ -144,41 +157,67 @@ void printchr(char value)
 		y++;
 	}
 	set_cursor_pos(x, y);
+
+	pit_enable_execute();
 }
 
 void printnum(uint32_t value)
 {
+	pit_disable_execute();
+
 	printstr(int2str(value));
+
+	pit_enable_execute();
 }
 
 void printhex(uint32_t value, size_t length)
 {
+	pit_disable_execute();
+	
 	printstr("0x");
 	printstr(hex2str(value, length));
+
+	pit_enable_execute();
 }
 
 void sprintstr(int port_num, char *value)
 {
+	pit_disable_execute();
+	
 	for (int i = 0; i < lengthof(value); i++) {
 		sprintchr(port_num, value[i]);
 	}
+
+	pit_enable_execute();
 }
 
 void sprintchr(int port_num, char value)
 {
+	pit_disable_execute();
+	
 	serial_select(port_num);
 	serial_write(value);
+
+	pit_enable_execute();
 }
 
 void sprintnum(int port_num, uint32_t value)
 {
+	pit_disable_execute();
+	
 	sprintstr(port_num, int2str(value));
+
+	pit_enable_execute();
 }
 
 void sprinthex(int port_num, uint32_t value, size_t length)
 {
+	pit_disable_execute();
+	
 	sprintstr(port_num, "0x");
 	sprintstr(port_num, hex2str(value, length));
+
+	pit_enable_execute();
 }
 
 // Print formatted char *
@@ -196,6 +235,8 @@ void sprinthex(int port_num, uint32_t value, size_t length)
 // Same as [%c<color>]
 void printstrf(char *value)
 {
+	pit_disable_execute();
+	
 	//uint32_t uint_args[16];
 	//for (int i = 0; i < 16; i++)
 	//	uint_args[i] = va_arg(args, uint32_t);
@@ -523,33 +564,49 @@ void printstrf(char *value)
 	}
 	if (!no_restore)
 	color = init_color;
+
+	pit_enable_execute();
 }
 
 void printer_clr()
 {
+	pit_disable_execute();
+	
 	memset(buf, color << 8 | 0x20, 80 * 25);
 	x = 0;
 	y = 0;
+	
+	pit_enable_execute();
 }
 
 void printinf(char *info)
 {
+	pit_disable_execute();
+	
 	if (x > 0) printchr('\n');
 	printstrf("%cB(info) %n");
 	printstrf(info);
 	printstrf("\n");
+
+	pit_enable_execute();
 }
 
 void printwrn(char *warning)
 {
+	pit_disable_execute();
+
 	if (x > 0) printchr('\n');
 	printstrf("%cY(warning) %n");
 	printstrf(warning);
 	printstrf("\n");
+	
+	pit_enable_execute();
 }
 
 void printerr(char *error, errorcode_t errorcode, bool panic)
 {
+	pit_disable_execute();
+	
 	if (x > 0) printchr('\n');
 	if (panic)
 	{
@@ -571,4 +628,6 @@ void printerr(char *error, errorcode_t errorcode, bool panic)
 		printstrf(error);
 		printstrf("\n");
 	}
+
+	pit_enable_execute();
 }

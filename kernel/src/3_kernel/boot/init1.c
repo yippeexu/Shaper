@@ -48,10 +48,7 @@ void init1()
     {
         if (!memcmp(blockdevices[i]->signature, "BLKDEV", 6)) break;
 
-        if (!blockdevices[i]->is_controller &&
-           !blockdevices[i]->is_packet)
+        if (!blockdevices[i]->is_controller && !blockdevices[i]->is_packet)
            vfs_init(blockdevices[i]);
     }
-
-    for (;;) ;
 }

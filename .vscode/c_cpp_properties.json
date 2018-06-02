@@ -45,8 +45,8 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceRoot}",
-                "${workspaceRoot}/kernel/src/include"
+                "${workspaceRoot}/kernel/src/include",
+                "${workspaceRoot}/kernel/lib/include"
             ],
             "defines": [
                 "_DEBUG",
