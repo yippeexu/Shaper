@@ -1,0 +1,30 @@
+
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
+
+typedef enum tag_floppycmd
+{
+    FLP_CMD_READ_TRACK = 2,
+    FLP_CMD_SET_DRIVE_PARAMETERS = 3,
+    FLP_CMD_SENSE_DRIVE_STATUS = 4,
+    FLP_CMD_WRITE_SECTOR = 5,
+    FLP_CMD_READ_SECTOR = 6,
+    FLP_CMD_RECALIBRATE = 7,
+    FLP_CMD_SENSE_INTERRUPT = 8,
+    FLP_CMD_WRITE_DELETED_DATA = 9,
+    FLP_CMD_READ_ID = 10,
+    FLP_CMD_READ_DELETED_DATA = 12,
+    FLP_CMD_FORMAT_TRACK = 13,
+    FLP_CMD_SEEK = 15,
+    FLP_CMD_VERSION = 16,
+    FLP_CMD_SCAN_EQUAL = 17,
+    FLP_CMD_PREPENDICULAR_MODE = 18,
+    FLP_CMD_CONFIGURE = 19,
+    FLP_CMD_LOCK = 20,
+    FLP_CMD_VERIFY = 22,
+    FLP_CMD_SCAN_LOW_OR_EQUAL = 25,
+    FLP_CMD_SCAN_HIGH_OR_EQUAL = 29
+} flpcmd_t;
+
+void flp_init();

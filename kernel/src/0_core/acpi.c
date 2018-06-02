@@ -17,19 +17,21 @@ char rsdp_signature[] =
     'R', 'S', 'D', ' ', 'P', 'T', 'R', ' '
 };
 
+fadt_t *fadt;
+dsdt_t *dsdt;
+
 void acpi_init()
 {
     printstrf("%cR%n");
-    printstr("(ACPI) Initializing\n");
-    
-    printstr("(ACPI) Looking for a valid RSD Pointer\n");
+    printstr("acpi: looking for a vaild rsdp\n");
     rsdp = acpi_find_rsdp();
+    fadt = (fadt_t *)acpi_find_sdt(rsdp->rsdt_base_address, "FACP");
+    dsdt = fadt->dsdt_base_address;
 }
 
 void acpi_switch()
 {
     printstrf("%cR%n");
-    fadt_t *fadt = (fadt_t *)acpi_find_sdt(rsdp->rsdt_base_address, "FACP");
     outb(fadt->smi_commandport, fadt->acpi_enable);
     while (inw(fadt->pm1a_controlblock) & 1 == 0) ;
 }
@@ -83,24 +85,24 @@ void acpi_shutdown()
             if (fadt->pm1b_controlblock != 0)
                 outw(fadt->pm1b_controlblock, slp_typb | slp_en);
         } else {
-            printstr("(ACPI) \\_S5 parse error!\n");
+            printstr("acpi: \\_S5 parse error!\n");
         }
     } else {
-        printstr("(ACPI) \\_S5 parse error!\n");
+        printstr("acpi: \\_S5 parse error!\n");
     }
 }
 
 void acpi_reboot()
 {
     printstrf("%cR%n");
-    printstr("(ACPI) Rebooting your Laptop\n");
+    printstr("acpi: rebooting this laptop\n");
     fadt_t *fadt = (fadt_t *)acpi_find_sdt(rsdp->rsdt_base_address, "FACP");
     if (fadt->header.revision >= 2 && fadt->flags & 1 << 10)
     {
         outb(fadt->reset_reg.address, fadt->reset_value);
     } else {
-        printstr("(ACPI) ACPI Reboot isn't supported!\n");
-        printstr("(KBD) Rebooting!\n");
+        printstr("acpi: acpi reboot is not supported!\n");
+        printstr("ps2: rebooting!\n");
         __asm("cli");
         
         uint8_t temp;
@@ -113,7 +115,7 @@ void acpi_reboot()
         outb(0x64, 0xFE);
         for (;;) __asm("hlt");
     }
-    printstr("(ACPI) Failed to reboot!\n");
+    printstr("acpi: failed to reboot!\n");
 }
 
 uint8_t acpi_get_century_reg()
@@ -132,7 +134,7 @@ rsdp_t *acpi_find_rsdp()
     {
         if ((uint32_t)rsdp_ptr >= ebda_ba+0x400 && (uint32_t)rsdp_ptr < 0xE0000) rsdp_ptr = (rsdp_t *)0xE0000; 
         if ((uint32_t)rsdp_ptr >= 0x100000) {
-            printstr("(ACPI) Cannot find RSD Pointer!\n");
+            printstr("acpi: cannot find rsdp!\n");
             return 0;
         }
         rsdp = rsdp_ptr += 16;
@@ -140,7 +142,7 @@ rsdp_t *acpi_find_rsdp()
 
     if (acpi_checksum((uint8_t *)rsdp, 20))
     {
-        printstr("(ACPI) Invaild RSDP Checksum!\n");
+        printstr("acpi: invaild rsdp checksum!\n");
         return 0;
     }
 
@@ -160,7 +162,7 @@ acpi_sdtheader_t *acpi_find_sdt(rsdt_t *rsdt, char *signature)
                 return rsdt->other_sdt[i];
             }
         }
-        printstr("(ACPI) Cannot find the SDT you are looking for!\n");
+        printstr("acpi: cannot find the sdt you're looking for!\n");
     }
     return 0;
 }

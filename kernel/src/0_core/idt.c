@@ -21,7 +21,7 @@ void _idt_preload()
 	memclr((void *)_idtr.base, (size_t)_idtr.limit);
 	memclr((void *)_idtr64.base, (size_t)_idtr64.limit);
 	
-	// _isr_load();
+	_isr_load();
 	_pic_remap(0x20, 0x03, 0x28, 0x11);
 }
 

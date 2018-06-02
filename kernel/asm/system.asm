@@ -1,14 +1,8 @@
 global _sys_enableinterrupts
 global _sys_disableinterrupts
-global _sys_v86mode
 global _sys_bioscalls32
 global _sys_enablepaging
-global blinking_fix
-global switch_realmode
 
-extern rm_test
-extern init1
-extern printnum
 extern page_dir
 
 backup_ebx dd 0
@@ -18,105 +12,7 @@ _sys_disableinterrupts:
 	ret
 _sys_enableinterrupts:
 	sti
-	;call _sys_v86mode
 	ret
-
-asm_memcopy:
-	mov eax, [ebp+ebx]
-	stosb
-	inc ebx
-	
-	dec ecx
-	jnz asm_memcopy
-	ret
-	
-_sys_v86mode:
-	;mov ebx, 0xB8000
-	;mov ebx, [backup_ebx]
-	
-	cli
-	cld
-	
-	;mov ebp, esp
-	
-	;push  0h        
-	;push  9000h        
-	
-	;pushfd
-	;or dword [esp], (1 << 17)  
-	
-	;push 0        
-	;push 9000h       
-	
-	;iretd
-	
-	;mov cs, [ebp+12]
-	;mov eax, 9000h
-	;jmp eax
-	
-    ;cli
-    ;cld
-
-    ; put a "jmp $" instruction at 0x0800:0x1000
-    ;mov edi, 0x9000
-	;mov al, 
-	;mov ebp, blinking_fix
-	;mov ecx, 0x10
-	;mov ebx, 0x00
-	;jmp asm_memcopy
-	; mov ax, 0x4f02
-	;mov al, 0x66
-	;stosb
-	;mov al, 0xB8
-	;stosb
-	;mov al, 0x02
-	;stosb
-	;mov al, 0x4F
-	;stosb
-	;
-	;; mov bx, 0x411d
-	;mov al, 0x66
-	;stosb
-	;mov al, 0xbb
-	;stosb
-	;mov al, 0x1d
-	;stosb
-	;mov al, 0x41
-	;stosb
-	;
-	;; int 0x10
-	;mov al, 0xCD
-	;stosb
-	;mov al, 0x10
-	;stosb
-	;
-	;; jmp $
-	;mov al, 0xEB
-	;stosb
-	;mov al, 0xFE
-	;stosb
-
-    ; enter v8086 mode
-    push 0                ; SS
-    push 0x8000            ; ESP - just for testing
-
-    pushfd                ; EFLAGS
-    pop eax                ; get back EFLAGS
-    or eax, (1 << 17)        ; enable v8086 flag
-    push eax            ; EFLAGS
-
-    push 0                ; CS
-    push 0x8000			    	; EIP
-	
-	iretd
-	
-blinking_fix:
-	mov ax, 4F02h
-	mov bx, 411Dh
-	int 10h
-	;jmp $
-	;call vm8086_entrance
-blinking_fix_length:
 
 %define rm_addr(x) 0x3000 + (x - _pm_16)
 
@@ -295,7 +191,7 @@ _rm_end:
 [bits 32]
 
 _sys_enablepaging:
-	mov eax, page_dir - 0xC0100000 + 0x100000
+	mov eax, page_dir - 0xC0000000
 	mov cr3, eax
 	
 	mov eax, cr0

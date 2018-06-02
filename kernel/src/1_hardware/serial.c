@@ -14,7 +14,7 @@ void serial_init(int port_num)
 {
     if (port_num >= 4) return;
     current_port = serial_ports[port_num];
-    printstr("(Serial-Port) Initializing COM");
+    printstr("serialport: initializing com");
     printnum(1+port_num);
     printchr('\n');
     outb(current_port + 1, 0x00);
@@ -24,7 +24,7 @@ void serial_init(int port_num)
     outb(current_port + 3, 0x03);
     outb(current_port + 2, 0xC7);
     outb(current_port + 4, 0x0B);
-    printstr("(Serial-Port) Done Initializing COM");
+    printstr("serialport: done initializing com");
     printnum(1+port_num);
     printchr('\n');
     sprintchr(0, '\n');

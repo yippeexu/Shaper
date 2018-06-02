@@ -16,37 +16,30 @@
 
 void init0()
 {
-	_sys_disableinterrupts();
-
 	init_printer(CGA16_LIGHTGREY, CGA16_BLACK);
 	serial_init(0);
 
-	printinf("(CORE) Core Init");
-	
-	printinf("(CORE) Disabling Interrupts");
+	printinf("core: disabling interrupts");
+	_sys_disableinterrupts();
 
-	printinf("(CORE) Loading IDT");
+	printinf("core: loading idt");
 	_idt_preload();
 	_idt_load();
 
-	printinf("(CORE) Loading IRQ");
+	printinf("core: remapping pic and seting up irq");
 	_irq_load();
 
+	printinf("core: enabling interrupts");
     _sys_enableinterrupts();
 
-	printinf("(CORE) Initializing ACPI");
+	printinf("core: intializing acpi");
 	acpi_init();
 
-	printinf("(CORE) Switching to ACPI mode");
+	printinf("core: switching to acpi mode");
 	acpi_switch();
 
-	printinf("(CORE) Checking CPUID");
 	cpuid_init();
 
-	printinf("(CORE) Initializing Heap");
+	printinf("core: initializing memory allocator (heap)");
 	heap_init();
-
-	printinf("(CORE) Core Done");
-	printchr('\n');
-	for (;;) ;
 }

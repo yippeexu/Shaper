@@ -76,38 +76,38 @@ void _isr_load()
 }										   
 char *_exception_messages[] =
 {
-	"Division by Zero             ",
-	"Debug                        ",
-	"Non Maskable Interrupt       ",
-	"Breakpoint                   ",
-	"Overflow                     ",
-	"Bound Range Exceeded         ",
-	"Invaild Opcode               ",
-	"Device Not Available         ",
-	"Double Fault                 ",
-	"Coproccessor Segment Overrun ",
-	"Invaild TSS                  ",
-	"Segment Not Present          ",
-	"General Protection Fault     ",
-	"Page Fault                   ",
-	"NaE                          ",
-	"x87 Floating-Point Exception ",
-	"Alignment Check              ",
-	"Machine Check                ",
-	"SIMD Floating-Point Exception",
-	"Virtualization Exception     ",
-	"NaE                          ",
-	"NaE                          ",
-	"NaE                          ",
-	"NaE                          ",
-	"NaE                          ",
-	"NaE                          ",
-	"NaE                          ",
-	"NaE                          ",
-	"NaE                          ",
-	"NaE                          ",
-	"Security Exception           ",
-	"NaE                          "
+	"Division by Zero              ",
+	"Debug                         ",
+	"Non Maskable Interrupt        ",
+	"Breakpoint                    ",
+	"Overflow                      ",
+	"Bound Range Exceeded          ",
+	"Invaild Opcode                ",
+	"Device Not Available          ",
+	"Double Fault                  ",
+	"Coproccessor Segment Overrun  ",
+	"Invaild TSS                   ",
+	"Segment Not Present           ",
+	"General Protection Fault      ",
+	"Page Fault                    ",
+	"NaE                           ",
+	"x87 Floating-Point Exception  ",
+	"Alignment Check               ",
+	"Machine Check                 ",
+	"SIMD Floating-Point Exception ",
+	"Virtualization Exception      ",
+	"NaE                           ",
+	"NaE                           ",
+	"NaE                           ",
+	"NaE                           ",
+	"NaE                           ",
+	"NaE                           ",
+	"NaE                           ",
+	"NaE                           ",
+	"NaE                           ",
+	"NaE                           ",
+	"Security Exception            ",
+	"NaE                           "
 };								   
 
 void _isr_fault_handler(x86_regs *context) 
@@ -119,6 +119,7 @@ void _isr_fault_handler(x86_regs *context)
 		printstrf("%cR%n");
 		printstr("** x86 CPU Exception occurred **\n");
 		printstr(_exception_messages[context->interrupt_no]);
+		printstr(" ");
 		sprintstr(0, "CPU Exception: ");
 		sprintstr(0, _exception_messages[context->interrupt_no]);
 		sprintstr(0, "\nx86 Register Table:\n");

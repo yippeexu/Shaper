@@ -146,7 +146,7 @@ void printchr(char value)
 	set_cursor_pos(x, y);
 }
 
-void printnum(int32_t value)
+void printnum(uint32_t value)
 {
 	printstr(int2str(value));
 }
@@ -170,7 +170,7 @@ void sprintchr(int port_num, char value)
 	serial_write(value);
 }
 
-void sprintnum(int port_num, int32_t value)
+void sprintnum(int port_num, uint32_t value)
 {
 	sprintstr(port_num, int2str(value));
 }
@@ -535,7 +535,7 @@ void printer_clr()
 void printinf(char *info)
 {
 	if (x > 0) printchr('\n');
-	printstrf("%cB[Info] %n");
+	printstrf("%cB(info) %n");
 	printstrf(info);
 	printstrf("\n");
 }
@@ -543,7 +543,7 @@ void printinf(char *info)
 void printwrn(char *warning)
 {
 	if (x > 0) printchr('\n');
-	printstrf("%cY[Warning] %n");
+	printstrf("%cY(warning) %n");
 	printstrf(warning);
 	printstrf("\n");
 }
@@ -553,7 +553,7 @@ void printerr(char *error, errorcode_t errorcode, bool panic)
 	if (x > 0) printchr('\n');
 	if (panic)
 	{
-		printstrf("%cr[Panic] %n");
+		printstrf("%cr(panic) %n");
 		printstrf(error);
 		printchr('\n');
 
@@ -567,7 +567,7 @@ void printerr(char *error, errorcode_t errorcode, bool panic)
 	}
 	else
 	{
-		printstrf("%cR[Error] %n");
+		printstrf("%cR(error) %n");
 		printstrf(error);
 		printstrf("\n");
 	}

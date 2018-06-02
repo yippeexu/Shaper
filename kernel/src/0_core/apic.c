@@ -17,13 +17,13 @@ madt_t *madt;
 void apic_init()
 {
     printstrf("%cC%n");
-    printstr("(APIC) Checking for APIC support!\n");
+    printstr("apic: checking for apic support!\n");
 
     if (!apic_is_supported()) {
-        printstr("(APIC) APIC isn't supported, using \"8259\" PIC!\n");
+        printstr("apic: apic not supported, using \"8259\" pic!\n");
         return;
     } 
-    printstr("(APIC) APIC is supported!\n");
+    printstr("apic: apic is supported!\n");
 
     madt = (madt_t *)acpi_find_sdt(rsdp->rsdt_base_address, "APIC");
 

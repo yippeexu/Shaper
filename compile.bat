@@ -31,7 +31,7 @@ copy bootloader\grub.cfg temp\iso\boot\grub\grub.cfg >NUL
 echo Creating Shaper ISO file
 bash -c "grub-mkrescue /mnt/c/Users/KingLuigi4932/Documents/GitHub/Shaper/temp/iso -o /mnt/c/Users/KingLuigi4932/Documents/GitHub/Shaper/Shaper.iso" >NUL
 rmdir /Q /S temp
-"\Program Files (x86)\qemu\qemu-system-i386.exe" -show-cursor -netdev user,id=n0 -device pcnet,netdev=n0 -boot d -cpu SandyBridge -net nic,model=pcnet -cdrom C:\Shaper\ShaperProject\Shaper.iso
+"\Program Files (x86)\qemu\qemu-system-i386.exe" -show-cursor -netdev user,id=n0 -device pcnet,netdev=n0 -boot d -cpu SandyBridge -net nic,model=pcnet -cdrom .\Shaper.iso
 "\Program Files (x86)\Bochs-2.6.9\bochsdbg.exe" -q -f vmprofiles\bochs.bxrc
 "\Program Files (x86)\VMware\VMware Workstation\vmplayer.exe" vmprofiles\vmware\ShaperOS.vmx
 exit

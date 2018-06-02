@@ -1,15 +1,5 @@
 
-global save_registers ; Saves CPU Registers to a pointer
-global load_registers ; Loads CPU Registers from a pointer
 global switch_registers
-
-_cr3 dd 0
-_ebp dd 0
-_eip dd 0
-_eflags dd 0
-
-_save_reg dd 0
-_load_reg dd 0
 
 switch_registers:
     pusha

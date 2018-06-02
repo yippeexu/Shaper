@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<Foundry>
-<VM>
-<VMId type="string">52 4e db 4e ee a7 92 89-b2 4b bb 03 71 50 d0 1b</VMId>
-<ClientMetaData>
-<clientMetaDataAttributes/>
-<HistoryEventList/></ClientMetaData>
-<vmxPathName type="string">ShaperOS.vmx</vmxPathName></VM></Foundry>

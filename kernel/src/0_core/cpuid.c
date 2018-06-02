@@ -72,6 +72,7 @@ void cpuid_init()
     char vendorid[8];
     _cpuid_get_vendorid(vendorid);
 
-    printstr("VendorID String: ");
+    printstr("cpuid: vendor string: '");
     printstr(vendorid);
+    printchr('\'');
 }

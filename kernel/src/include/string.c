@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <heap.h>
+
 #define GetBytePtr(ptr) (uint8_t *)ptr;
 #define GetSizePtr(ptr) (size_t *)ptr;
 
@@ -363,7 +365,7 @@ char *strtok(char *str, char *delimiters)
 
 char *int2str(int32_t integer)
 {
-	char *result;
+	static char result[15];
 	int i = 0;
 
 	bool is_negative = integer < 0;
@@ -412,11 +414,11 @@ int32_t str2int(char *integer_str)
 }
 
 char hex[] = { '0', '1', '2', '3', '4', '5', '6', '7',
-				'8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+				'8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 char *hex2str(uint32_t integer, size_t length)
 {
-	char *buffer;
+	static char buffer[15];
 	uint32_t internalinteger = integer;
 	int len = 0;
 	
