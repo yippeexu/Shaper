@@ -33,7 +33,23 @@ copy temp\Shaper.elf temp\iso\boot\Shaper.elf >NUL
 copy temp\Shaper.elf D:\Shaper.elf >NUL
 copy bootloader\grub.cfg temp\iso\boot\grub\grub.cfg >NUL
 echo Creating Shaper ISO file
-bash -c "grub-mkrescue /mnt/c/Users/KingLuigi4932/Documents/GitHub/Shaper/temp/iso -o /mnt/c/Users/KingLuigi4932/Documents/GitHub/Shaper/Shaper.iso" >NUL
+
+set variable=%cd%
+
+set "drive=%variable:~0,1%"
+
+set variable=%variable:~2%
+set "variable=%variable:\=/%"
+
+echo>%Temp%\%drive%
+dir /b/l %Temp%\%drive%>%Temp%\lower.tmp
+set /p drive=<%Temp%\lower.tmp
+del %Temp%\%drive%
+del %Temp%\lower.tmp
+
+set "path=/mnt/%drive%%variable%"
+
+C:\Windows\System32\bash -c "grub-mkrescue %path%/temp/iso -o %path%/Shaper.iso" >NUL
 rmdir /Q /S temp
 "\Program Files (x86)\qemu\qemu-system-i386.exe" -show-cursor -netdev user,id=n0 -device pcnet,netdev=n0 -boot d -cpu SandyBridge -net nic,model=pcnet -cdrom .\Shaper.iso
 "\Program Files (x86)\Bochs-2.6.9\bochsdbg.exe" -q -f vmprofiles\bochs.bxrc
